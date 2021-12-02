@@ -1,6 +1,6 @@
 import os
 
-filename = os.getcwd() + "\\day01\\input-01"
+filename = os.path.dirname(__file__) + "\\input"
 
 with open(filename) as file:
     current = k= last= 0
