@@ -1,0 +1,52 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "EmrysApplication": {
+      "Type": "AWS::ElasticBeanstalk::Application",
+      "Properties": {
+        "ApplicationName" : "EmrysApplication",
+        "Description" : "Some APP"
+      }
+    },
+    "EmrysConfigurationTemplate": {
+      "Type": "AWS::ElasticBeanstalk::ConfigurationTemplate",
+      "Properties": {
+        "ApplicationName" : "EmrysApplication",
+        "OptionSettings":[
+          {
+            "OptionName": "MaxSize",
+            "Namespace": "aws.autoscaling:asg",
+            "Value": 5
+          },
+          {
+            "OptionName": "InstanceTypes",
+            "Namespace": "aws.ec2:instances",
+            "Value": "t2.micro"
+          },
+          {
+            "OptionName": "EnableSpot",
+            "Namespace": "aws.ec2:instances",
+            "Value": true
+          }
+        ],
+        "SolutionStackName": "64bit Amazon Linux 2018.03 v2.27.2 running Multi-container Docker 20.10.7-ce (Generic)"
+      }
+    },
+    "EmrysEnvironment": {
+      "Type": "AWS::ElasticBeanstalk::Environment",
+      "Properties": {
+        "ApplicationName" : "EmrysApplication",
+        "TemplateName" : "EmrysConfigurationTemplate",
+        "EnvironmentName" : "EmrysEnvironment"
+      }
+    },
+    "EmrysEnvironment": {
+      "Type": "AWS::ElasticBeanstalk::ApplicationVersion",
+      "Properties": {
+        "ApplicationName" : "EmrysApplication",
+        "TemplateName" : "EmrysConfigurationTemplate",
+        "EnvironmentName" : "EmrysEnvironment"
+      }
+    }
+  }
+}
