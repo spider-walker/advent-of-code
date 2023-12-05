@@ -1,28 +1,37 @@
 print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-print("Solution 02 Day 3")
+print("Solution 02 Day 4")
 print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 import re
-from collections import defaultdict
 
-
-
-file1 = open("input", "r")
+file1 = open("sample", "r")
 lines = file1.readlines()
-total = 0
-potential_gears = defaultdict(list)
-for i, line in enumerate(lines):
-    start_line = max(i - 1, 0)
-    end_line = min(i + 2, len(lines))
-    for match in re.finditer(r"(\d+)", line):
-        start_check = max(0, match.start() - 1)
-        end_check = min(len(line), match.end() + 1)
-        for l in range(start_line, end_line):
-            for c in range(start_check, end_check):
-                if lines[l][c] == "*":
-                    potential_gears[(l, c)].append(int(match.group()))
-for numbers in potential_gears.values():
-    if len(numbers) == 2:
-        total += numbers[0] * numbers[1]
-     
-print(total)
+line_number = 0
+sum = 0
+winnings = {}
+for j, line in enumerate(lines):
+    parts = re.split(r":|\|", line.strip())
+    winning_numbers = list(filter(None,parts[1].split(" ")))
+    in_hand = list(filter(None,parts[2].split(" ")))
+    common = [x for x in winning_numbers if x in in_hand]
+    original = len(common)>0 and 1 or 0
+    
+    prev_wins = 0
+    if j  in winnings:
+       prev_wins= winnings[j]
+
+    if j not in winnings:
+        winnings[j] = original 
+
+    print(f'{j}: ----------------{prev_wins} copies:{original+prev_wins}')
+    
+    
+    
+    for i in range(1, len(common)+1):
+        index = j + i 
+        if index not in winnings:
+            winnings[index] = 0
+        winnings[index] += original +prev_wins   
+        print(f'{index}: ----------------{winnings[index]}')  
+    sum += winnings[j] 
+print(f'sum={sum}')
