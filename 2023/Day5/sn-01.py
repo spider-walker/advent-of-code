@@ -6,31 +6,31 @@ import re
 
 from pathlib import Path
 
-def source_to_dest(_almanac,_from, _to):   
-    seed_to_soil = _almanac[_from]
-    print(seed_to_soil)
-    source=[]
-    target=[]
-    for i in seed_to_soil:
-        _range = i[2]
-        source = source +list(range(i[0], i[0] + _range))
-        target = target+ list(range(i[1], i[1] + _range))
-    print(source)
-    print(target)
 
-    seeds = _almanac[_to]
-    for i in seeds:
-        try:
-            index = source.index(i)
-            print(target[index],source[index])
-        except:
-            print(i,i)
+def source_to_dest(_almanac, _from, _to):
+    print("Mapping from " + _from )
+    seed_to_soil = _almanac[_from]
+    m =0
+    for i in _to:
+        for j in seed_to_soil:
+            a= j[1]
+            b= j[1] + j[2]-1
+            if i >= a and i <= b:
+                c= i - a
+                d= j[0] + c
+                _to[m] = d
+                print(f'{d} {m} ')
+                break
+        m+=1     
+    print(_to)        
+    return _to
+
 
 almanac = {}
 title = ""
 next_line_is_title = False
 j = 0
-for line in Path("sample").read_text().splitlines():
+for line in Path("input").read_text().splitlines():
     j += 1
     if j == 1:
         tokens = line.split(":")
@@ -48,7 +48,10 @@ for line in Path("sample").read_text().splitlines():
 
     next_line_is_title = False
 
-source_to_dest(almanac,"seed-to-soil","seeds",)
+almanac_keys = list(almanac.keys())
+almanac_keys.remove("seeds")
+to_be_mapped = almanac["seeds"]
+for i in almanac_keys:
+    to_be_mapped = source_to_dest(almanac, i, to_be_mapped)
 
-
-
+print(min(to_be_mapped))
