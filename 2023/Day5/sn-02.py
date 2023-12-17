@@ -8,58 +8,49 @@ from pathlib import Path
 
 
 def source_to_dest(_almanac, _from, _to):
-    print("Mapping from " + _from )
+    print(f"Mapping from {_from}")
     seed_to_soil = _almanac[_from]
-    m =0
-    for i in _to:
-        for j in seed_to_soil:
-            a= j[1]
-            b= j[1] + j[2]-1
-            if i >= a and i <= b:
-                c= i - a
-                d= j[0] + c
-                _to[m] = d
-                print(f'{d} {m} ')
+
+    for m, i in enumerate(_to):
+        for start, a, length in seed_to_soil:
+            b = a + length - 1
+            if a <= i <= b:
+                c = i - a
+                _to[m] = start + c
                 break
-        m+=1     
-    print(_to)        
+
     return _to
 
 
 almanac = {}
 title = ""
 next_line_is_title = False
-j = 0
-for line in Path("input").read_text().splitlines():
-    j += 1
-    if j == 1:
-        tokens = line.split(":")
-        title = tokens[0]
-        almanac[title] = [int(x) for x in list(filter(None, tokens[1].split(" ")))]
-        continue
+
+lines = Path("input").read_text().splitlines()
+
+for line in lines:
     if line.strip() == "":
         next_line_is_title = True
         continue
     if next_line_is_title:
         title = line.split(" ")[0]
         almanac[title] = []
-    if not next_line_is_title:
-        almanac[title].append([int(x) for x in list(filter(None, line.split(" ")))])
-
-    next_line_is_title = False
+        next_line_is_title = False
+    else:
+        if title not in almanac:
+            title, values = line.split(":")
+            almanac[title] = [int(x) for x in values.split() if x]
+        else:
+            almanac[title].append([int(x) for x in line.split() if x])
 
 almanac_keys = list(almanac.keys())
 almanac_keys.remove("seeds")
 to_be_mapped = almanac["seeds"]
-seed_pairs= []
 
-k=0
-for i in to_be_mapped:
-    if k % 2 == 0:
-        x= list(range(to_be_mapped[k], to_be_mapped[k]+to_be_mapped[k+1]))
-        seed_pairs.extend(x)
-    k+=1
-print(seed_pairs) 
+seed_pairs = []
+for k in range(0, len(to_be_mapped), 2):
+    seed_pairs.extend(range(to_be_mapped[k], to_be_mapped[k] + to_be_mapped[k + 1]))
+
 for i in almanac_keys:
     to_be_mapped = source_to_dest(almanac, i, seed_pairs)
 

@@ -1,5 +1,5 @@
 print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-print("Solution 01 Day 3")
+print("Solution 01 Day 5")
 print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 import re
@@ -10,19 +10,14 @@ from pathlib import Path
 def source_to_dest(_almanac, _from, _to):
     print("Mapping from " + _from )
     seed_to_soil = _almanac[_from]
-    m =0
-    for i in _to:
-        for j in seed_to_soil:
-            a= j[1]
-            b= j[1] + j[2]-1
-            if i >= a and i <= b:
-                c= i - a
-                d= j[0] + c
-                _to[m] = d
-                print(f'{d} {m} ')
+    for m, i in enumerate(_to):
+        for start, a, length in seed_to_soil:
+            b = a + length - 1
+            if a <= i <= b:
+                c = i - a
+                _to[m] = start + c
                 break
-        m+=1     
-    print(_to)        
+
     return _to
 
 
