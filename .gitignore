@@ -1,1 +1,4 @@
 .history
+venv
+**/sample*
+**/input*

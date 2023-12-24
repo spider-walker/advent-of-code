@@ -14,9 +14,9 @@ def solve_a(lines):
     k = 0
     while True:
         k += 1
-        dir = left_right.pop(0)
-        left_right.append(dir)
-        search = 0 if dir == "L" else 1
+        _dir = left_right.pop(0)
+        left_right.append(_dir)
+        search = 0 if _dir == "L" else 1
         node = start[search]
         if node == "ZZZ":
             break
